@@ -1,0 +1,41 @@
+flowchart TD
+    U([User]) --> ST[Streamlit UI<br/>:8501]
+    ST -->|check emails<br/>correct labels<br/>inspect memory| API[FastAPI Backend<br/>:8000]
+
+    API -->|fetch unseen| IMAP[Gmail IMAP]
+    API -->|send replies| SMTP[Gmail SMTP]
+
+    API --> AG
+
+    subgraph AG[LangGraph Agent]
+        TR[Triage Router<br/>GPT-4o-mini] -->|ignore| IGN[Log & skip]
+        TR -->|notify| NTF[Notify user]
+        TR -->|respond| RA[Response Agent<br/>GPT-4o ReAct]
+        RA --> DR[Draft reply]
+        DR --> SEND[Send via SMTP]
+    end
+
+    subgraph MEM[Qdrant Memory Store]
+        SEM[(Semantic<br/>contacts · preferences)]
+        EPI[(Episodic<br/>corrected examples)]
+        PRO[(Procedural<br/>triage rules)]
+    end
+
+    TR <-->|read rules + examples| MEM
+    RA <-->|read/write facts| SEM
+
+    COR[User Correction] --> EPI
+    COR --> OPT[Prompt Optimizer<br/>Claude / GPT-4o]
+    OPT -->|rewrite rules| PRO
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef api fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+    classDef agent fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef mem fill:#fde2e4,stroke:#c1121f,color:#5f0f13,stroke-width:2px;
+    classDef ext fill:#efe3ff,stroke:#7b2cbf,color:#3c096c,stroke-width:2px;
+
+    class U,ST ui;
+    class API api;
+    class TR,RA,DR,SEND,IGN,NTF,AG agent;
+    class SEM,EPI,PRO,MEM mem;
+    class IMAP,SMTP,OPT,COR ext;

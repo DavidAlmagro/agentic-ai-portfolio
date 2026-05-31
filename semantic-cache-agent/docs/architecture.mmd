@@ -1,0 +1,33 @@
+flowchart TD
+    U([User Query]) --> ST[Streamlit UI<br/>:8501]
+    ST -->|POST /query| API[FastAPI API<br/>:8000]
+    ST -->|GET /health<br/>GET /cache/stats| API
+    API --> WF
+
+    subgraph WF[LangGraph Workflow]
+        D[Decompose query] --> C[Check semantic cache]
+        C -->|all hits| S[Synthesize final answer]
+        C -->|any miss| R[Research knowledge base]
+        R --> E[Evaluate answer quality]
+        E -->|score < 0.7| R
+        E -->|score ≥ 0.7| W[Write back to cache]
+        W --> S
+    end
+
+    C <-->|HNSW vector search| RS[(Redis Stack<br/>Vector Index)]
+    W -->|store answer + embedding| RS
+    API -->|POST /ingest/dataset| HF[Bitext HF Dataset]
+    API -->|POST /ingest/url| TV[Tavily Extraction]
+    WF -. traces .-> LS[LangSmith]
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef api fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+    classDef wf fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef store fill:#fde2e4,stroke:#c1121f,color:#5f0f13,stroke-width:2px;
+    classDef ext fill:#efe3ff,stroke:#7b2cbf,color:#3c096c,stroke-width:2px;
+
+    class ST,U ui;
+    class API api;
+    class D,C,R,E,W,S,WF wf;
+    class RS store;
+    class HF,TV,LS ext;

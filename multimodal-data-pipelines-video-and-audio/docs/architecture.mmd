@@ -1,0 +1,28 @@
+flowchart TD
+    U([Video Upload]) --> ST[Streamlit UI]
+    ST --> CP[Cost Preview<br/>token estimation]
+    CP -->|user confirms| PL
+
+    subgraph PL[Multimodal Pipeline]
+        FE[Stage 1: Frame Extraction<br/>OpenCV · uniform sampling · ≤20 frames]
+        FE --> AT[Stage 2: Audio Transcription<br/>ffmpeg → Whisper-1<br/>graceful fallback if no audio]
+        AT --> VLM[Stage 3: VLM Analysis<br/>GPT-4o Vision<br/>frames + transcript → Pydantic JSON]
+        VLM --> KG[Stage 4: Knowledge Graph<br/>pyvis interactive graph<br/>Property → Room → Furniture]
+    end
+
+    VLM -->|structured output| RES
+
+    subgraph RES[Results Display]
+        SM[Summary Metrics<br/>rooms · type · style]
+        RI[Room Inventory<br/>cards + tables]
+        GR[Interactive Knowledge Graph<br/>pyvis]
+        JS[JSON Download<br/>annotated output]
+    end
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef pipeline fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef results fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+
+    class U,ST,CP ui;
+    class FE,AT,VLM,KG,PL pipeline;
+    class SM,RI,GR,JS,RES results;

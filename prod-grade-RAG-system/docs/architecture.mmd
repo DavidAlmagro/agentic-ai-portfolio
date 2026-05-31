@@ -1,0 +1,31 @@
+flowchart TD
+    U([User Query]) --> ST[Streamlit UI<br/>Strategy selector · Top-k slider]
+    ST --> G
+
+    subgraph G[LangGraph Pipeline]
+        CL[Classify<br/>specific / aggregate] --> RT[Retrieve<br/>Vector + BM25 hybrid]
+        RT --> RRF[Reciprocal Rank Fusion]
+        RRF --> RK[Re-rank<br/>Cross-encoder scoring]
+        RK --> VF[Verify<br/>Confidence gating]
+        VF -->|score ≥ threshold| GN[Generate<br/>GPT-4o-mini + citations]
+        VF -->|score < threshold| AB[Abstain<br/>Insufficient evidence]
+    end
+
+    RT <-->|similarity search| CH[(ChromaDB<br/>text-embedding-3-small)]
+    RT <-->|keyword search| BM[BM25 Index<br/>rank-bm25]
+    RK -.->|mmarco multilingual| CE[Cross-Encoder]
+
+    PDF[PDF Bills<br/>pdfplumber] -->|ingest + chunk| CH
+    PDF -->|build index| BM
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef pipeline fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef store fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+    classDef ext fill:#fde2e4,stroke:#c1121f,color:#5f0f13,stroke-width:2px;
+    classDef input fill:#efe3ff,stroke:#7b2cbf,color:#3c096c,stroke-width:2px;
+
+    class U,ST ui;
+    class CL,RT,RRF,RK,VF,GN,AB,G pipeline;
+    class CH,BM store;
+    class CE ext;
+    class PDF input;

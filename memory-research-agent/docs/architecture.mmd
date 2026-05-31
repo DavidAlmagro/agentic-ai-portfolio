@@ -1,0 +1,45 @@
+flowchart TD
+    U([User Query]) --> ST[Streamlit UI<br/>Chat · Summaries · Tool Logs]
+    ST --> AG
+
+    subgraph AG[LangGraph Agent - ReAct]
+        BC[Build Context<br/>5 memory reads] --> TB[Token Budget Check<br/>compress if over threshold]
+        TB --> TS[Semantic Tool Selection<br/>top-5 from registry]
+        TS --> LLM[LLM Reasoning<br/>GPT-4o]
+        LLM -->|tool_call| EX[Execute Tool]
+        EX -->|result| LLM
+        LLM -->|final answer| PS[Persist<br/>conversation + entities + workflows]
+    end
+
+    subgraph CHROMA[ChromaDB - 5 Collections]
+        KB[(Knowledge Base<br/>papers · web)]
+        WF[(Workflows<br/>tool sequences)]
+        ENT[(Entities<br/>researchers · systems)]
+        SUM[(Summaries<br/>compressed history)]
+        TBX[(Toolbox<br/>tool embeddings)]
+    end
+
+    BC <--> CHROMA
+    BC <--> SQL[(SQLite<br/>conversation + tool_log)]
+    TS <-->|similarity search| TBX
+    PS --> CHROMA
+    PS --> SQL
+
+    subgraph TOOLS[Tool Registry]
+        AX[arxiv_search]
+        FP[fetch_paper]
+        WS[web_search]
+        EE[extract_entities]
+    end
+
+    EX --> TOOLS
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef agent fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef store fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+    classDef tools fill:#efe3ff,stroke:#7b2cbf,color:#3c096c,stroke-width:2px;
+
+    class U,ST ui;
+    class BC,TB,TS,LLM,EX,PS,AG agent;
+    class KB,WF,ENT,SUM,TBX,CHROMA,SQL store;
+    class AX,FP,WS,EE,TOOLS tools;

@@ -1,0 +1,38 @@
+flowchart TD
+    U([Visitor - Microphone]) --> WEB[ADK Web UI<br/>Real-time audio streaming]
+    WEB --> BIDI[bidiGenerateContent<br/>Gemini native-audio]
+
+    subgraph AGENT[ADK Agent — portfolio_guide]
+        SI[System Instruction<br/>Embedded portfolio context<br/>7 projects · skills · patterns]
+        GS[google_search<br/>Server-side tool]
+        BC[before_tool_callback<br/>Domain guardrails]
+        AC[after_tool_callback<br/>Audit log to session state]
+    end
+
+    BIDI --> SI
+    SI -->|technology question| BC
+    BC -->|allowed| GS
+    BC -->|blocked domain| BLOCK[Reject with reason]
+    GS --> AC
+    AC --> BIDI
+
+    SI -->|portfolio question| BIDI
+
+    BIDI --> VOICE[SpeechConfig - Orus voice]
+    VOICE --> U
+
+    subgraph GUARDRAILS[Guardrails]
+        direction LR
+        G1[Block reddit.com]
+        G2[Block quora.com]
+        G3[Block youtube.com]
+        G4[Block tiktok.com]
+    end
+
+    BC -.-> GUARDRAILS
+
+    subgraph FUTURE[Future — pending ADK fix]
+        direction LR
+        MCP[MCP Server<br/>Knowledge Graph<br/>887 nodes · 1416 edges]
+        SUB[Sub-agents<br/>project_explainer<br/>skills_agent]
+    end

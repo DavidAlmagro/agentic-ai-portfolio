@@ -1,0 +1,40 @@
+flowchart TD
+    U([User]) --> ST[Streamlit Multi-Page UI<br/>6 steps · chat + manual tabs]
+
+    ST --> AR
+
+    subgraph AR[Agent Runner - OpenAI Function Calling]
+        S1[Step 1: User Intent<br/>propose KG goal → approve]
+        S1 --> S2[Step 2: File Selection<br/>recommend CSVs + Wikipedia]
+        S2 --> S3
+
+        subgraph S3[Step 3: Structured Schema]
+            PA[Proposal Agent<br/>node types · relationships] --> CR[Critic Agent<br/>validate vs CSV]
+            CR -->|invalid → feedback| PA
+            CR -->|valid| AP[User Approve]
+        end
+
+        S3 --> S4[Step 4: Unstructured Schema<br/>NER entity + fact types<br/>from Wikipedia]
+        S4 --> S5[Step 5: Domain Graph<br/>deterministic LOAD CSV<br/>no LLM]
+        S5 --> S6[Step 6: Lexical Graph<br/>LLMGraphTransformer<br/>+ Jaro-Winkler resolution]
+    end
+
+    S5 -->|Cypher: MERGE nodes/rels| NEO[(Neo4j 5<br/>+ APOC plugin)]
+    S6 -->|CORRESPONDS_TO edges| NEO
+
+    DATA[Data Layer<br/>CSVs + Wikipedia .md] -->|LOAD CSV| NEO
+    S6 -.->|LangChain| LLM[GPT-4o]
+
+    NEO --> VIS[pyvis Visualization<br/>3 views: domain · lexical · combined]
+
+    classDef ui fill:#fff2cc,stroke:#b58900,color:#4a3b00,stroke-width:2px;
+    classDef agent fill:#e8f5e9,stroke:#2e7d32,color:#1b4332,stroke-width:2px;
+    classDef store fill:#fde2e4,stroke:#c1121f,color:#5f0f13,stroke-width:2px;
+    classDef ext fill:#efe3ff,stroke:#7b2cbf,color:#3c096c,stroke-width:2px;
+    classDef data fill:#d9edf7,stroke:#31708f,color:#12384a,stroke-width:2px;
+
+    class U,ST ui;
+    class S1,S2,S3,S4,S5,S6,PA,CR,AP,AR agent;
+    class NEO store;
+    class LLM,VIS ext;
+    class DATA data;
