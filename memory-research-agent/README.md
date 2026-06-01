@@ -8,7 +8,9 @@ Unlike standard chatbots that lose context between sessions, this agent maintain
 
 ## Demo
 
-https://github.com/user-attachments/assets/03104955-af36-4552-b6b4-f54a65162e38
+
+https://github.com/user-attachments/assets/f5031119-eb29-4cd8-bd6b-7b0e23697d48
+
 
 The demo walks through: searching arXiv for papers, ingesting them into the knowledge base, querying across threads, and watching the context window auto-summarise when it fills up.
 
