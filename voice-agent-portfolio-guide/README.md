@@ -8,7 +8,7 @@ A live conversational voice agent that presents David's Agentic AI portfolio to 
 
 ## Demo
 
-https://github.com/user-attachments/assets/42ffe89b-71c5-4007-bbc2-465b3e2fac0d
+https://github.com/user-attachments/assets/3da9e201-fa25-4b10-90ca-dc32a549e1a1
 
 ---
 
