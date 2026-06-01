@@ -8,7 +8,7 @@ Unlike naive exact-match caches, this system understands **meaning**: "How do I 
 
 ## Demo
 
-https://github.com/user-attachments/assets/a21df9ce-bf23-47b4-a0ed-914404760dfe
+https://github.com/user-attachments/assets/7ab38857-ad6e-4f34-93b0-c98132c2ea4b
 
 ---
 
