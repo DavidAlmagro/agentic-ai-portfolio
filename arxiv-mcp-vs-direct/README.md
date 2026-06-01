@@ -11,7 +11,11 @@ Both approaches use the same LLM (GPT-4o-mini) and identical arxiv search logic,
 
 ## Demo
 
-https://github.com/user-attachments/assets/6af71a82-67bb-4f64-8466-e60ee21ccdf2
+
+
+https://github.com/user-attachments/assets/32ac0d02-b457-4f13-b205-19ee26d0bc60
+
+
 
 ---
 
