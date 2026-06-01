@@ -8,7 +8,7 @@ Upload a walkthrough video. Get back a JSON file ready to feed into a property m
 
 ## Demo
 
-https://github.com/user-attachments/assets/04084f7e-067c-4ed0-a886-e3b55ef81045
+https://github.com/user-attachments/assets/a0aaaa84-7730-4e60-998c-3427a6ed3df2
 
 ---
 
