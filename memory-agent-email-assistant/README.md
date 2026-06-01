@@ -8,7 +8,11 @@ Correct a wrong classification once. The agent remembers the specific example (e
 
 ## Demo
 
-https://github.com/user-attachments/assets/7d627e7c-379b-4a09-acaf-28af29b939f9
+
+
+https://github.com/user-attachments/assets/98af82f9-9102-49ee-8b6c-4aa931cad321
+
+
 
 ---
 
