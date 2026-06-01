@@ -6,7 +6,7 @@ A production-grade RAG system that lets you ask natural-language questions about
 
 ## Demo
 
-https://github.com/user-attachments/assets/4ed353b3-09ef-4352-af85-da9231b7d965
+https://github.com/user-attachments/assets/558e920c-5eda-455a-bab7-7b24915da731
 
 The demo shows multilingual questions using **Hybrid RAG** (vector + BM25): queries in both Spanish and English answered accurately with cited sources. When a challenging cross-lingual question stumps the hybrid approach, we switch to the **Full Pipeline** — adding cross-encoder re-ranking and a verification gate — and it handles the query correctly.
 
